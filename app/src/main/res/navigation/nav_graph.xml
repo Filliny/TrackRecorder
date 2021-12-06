@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_login">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.trackrecorder.ui.map.MapFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_history"
+            app:destination="@id/nav_history" />
+        <action
+            android:id="@+id/action_nav_home_to_logoutFragment"
+            app:destination="@id/nav_logout" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="com.example.trackrecorder.ui.login.LoginFragment"
+        android:label="@string/title_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_home"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_loginFragment_to_signInFragment"
+            app:destination="@id/nav_sing_in" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_sing_in"
+        android:name="com.example.trackrecorder.ui.register.RegisterFragment"
+        android:label="@string/title_sign_in"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_signInFragment_to_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.example.trackrecorder.ui.history.HistoryFragment"
+        android:label="@string/title_history"
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_nav_history_to_nav_home"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_history_to_logoutFragment"
+            app:destination="@id/nav_logout" />
+        <action
+            android:id="@+id/action_nav_history_to_logoutFragment2"
+            app:destination="@id/nav_logout" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.example.trackrecorder.ui.logout.LogoutFragment"
+        android:label="@string/title_logout"
+        tools:layout="@layout/fragment_logout" >
+        <action
+            android:id="@+id/action_logoutFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_logoutFragment_to_nav_history"
+            app:destination="@id/nav_history" />
+        <action
+            android:id="@+id/action_logoutFragment_to_nav_login"
+            app:destination="@id/nav_login" />
+    </fragment>
+</navigation>
