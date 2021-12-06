@@ -1,28 +1,93 @@
 package com.example.trackrecorder.ui.login;
 
 import android.app.Application;
+import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.MutableLiveData;
 
+import com.example.trackrecorder.App;
+import com.example.trackrecorder.R;
+import com.example.trackrecorder.database.UserRepository;
 import com.example.trackrecorder.database.models.ErrorModel;
 import com.example.trackrecorder.database.models.UserModel;
 
-public class LoginFragmentViewModel extends ViewModel {
+import org.xml.sax.ErrorHandler;
 
-    public UserModel user;
+public class LoginFragmentViewModel extends AndroidViewModel {
+
+    public UserModel userRequest;
     ErrorModel errorHolder;
+    UserRepository userRepository;
 
-//    public LoginFragmentViewModel(@NonNull Application application) {
-//        super(application);
-//    }
+    MutableLiveData<UserModel> userToWorkWith = new MutableLiveData<>();
+    ObservableField<ErrorModel> errorObservable = new ObservableField<>();
 
-    public ErrorModel getErrorHolder() {
-        return errorHolder;
+    public LoginFragmentViewModel(@NonNull Application application) {
+        super(application);
+        userRequest = new UserModel();
+        userRequest.setEmail("olegfil@gmail.com");
+        userRequest.setPassword("12345");
+        userRepository = App.getInstance().getUserRepository();
     }
 
-    public void loginButtonPress(){
-        UserModel userr = user;
+    public ObservableField<ErrorModel> getErrorObservable() {
+        return errorObservable;
     }
+
+    public MutableLiveData<UserModel> getUserToWorkWith() {
+        return userToWorkWith;
+    }
+
+    public void loginButtonPress() {
+
+        if (!isLoginFormValid()) return;
+        //cos userRequest have no id - we get proper user from base
+        UserModel workUser =   userRepository.getUserFromRequest(userRequest);
+        userToWorkWith.postValue(workUser);
+
+    }
+
+    private boolean isLoginFormValid() {
+
+        boolean result = true;
+        errorHolder = new ErrorModel();
+
+        if (userRequest.getEmail() == null) {
+            errorHolder.emailError = "Enter Your Email";
+            result = false;
+        }
+
+//user
+
+        if (userRequest.getPassword() == null) {
+            errorHolder.passwordError = "Enter Your Password";
+            result = false;
+        } else {
+
+        }
+
+        if (userRequest.getPassword() != null && userRequest.getEmail() != null) {
+
+            if (!userRepository.isExist(userRequest.getEmail())) {
+                //check for existence of user
+                errorHolder.passwordError = "No Such User - Please register!";
+                errorHolder.emailError = "No Such User - Please register!";
+                result = false;
+            } else {
+                //if user exist check for pass and email validity
+                if (userRepository.getUserFromRequest(userRequest) == null) {
+                    errorHolder.passwordError = "Wrong password - try again";
+                    result = false;
+                }
+            }
+
+        }
+
+        if (!result) errorObservable.set(errorHolder);
+        return result;
+    }
+
 }

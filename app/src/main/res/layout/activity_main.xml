@@ -6,8 +6,8 @@
     <data>
         <variable
             name="model_main"
-            type="MainActivityViewModel" />
-        <import type="com.example.trackrecorder.MainActivityViewModel"/>
+            type="com.example.trackrecorder.ui.MainActivityViewModel" />
+        <import type="com.example.trackrecorder.ui.MainActivityViewModel"/>
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout

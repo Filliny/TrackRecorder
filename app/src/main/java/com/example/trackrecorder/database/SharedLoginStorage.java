@@ -3,20 +3,20 @@ package com.example.trackrecorder.database;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class LoginHolder {
+public class SharedLoginStorage {
 
     private static SharedPreferences sharedPreferences;
     private static final String USER_SHARED_PREFS_NAME = "LOGGED_USER";
     private static final String USER_ID_KEY = "USER_ID";
-    private static LoginHolder instance;
+    private static SharedLoginStorage instance;
 
-    public LoginHolder(Context context){
+    public SharedLoginStorage(Context context){
         sharedPreferences = context.getSharedPreferences(USER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public static LoginHolder getInstance(Context context){
+    public static SharedLoginStorage getInstance(Context context){
         if(instance == null){
-            instance = new LoginHolder(context);
+            instance = new SharedLoginStorage(context);
         }
         return  instance;
     }

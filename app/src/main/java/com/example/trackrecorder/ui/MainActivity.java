@@ -1,12 +1,10 @@
-package com.example.trackrecorder;
+package com.example.trackrecorder.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -16,8 +14,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 
+import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.ActivityMainBinding;
 import com.example.trackrecorder.databinding.NavHeaderMainBinding;
 import com.google.android.material.navigation.NavigationView;
@@ -38,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.appBarMain.toolbarSupp);
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_history, R.id.nav_login)
                 .setOpenableLayout(drawer)
@@ -50,17 +47,17 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-
-                if(destination.getId() == R.id.nav_login){
-                    Log.d("login","Logout");
+                if(destination.getId() == R.id.nav_home){
+                    binding.appBarMain.setFloating(true);
+                }else {
+                    binding.appBarMain.setFloating(false);
                 }
+
             }
         });
+
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        //getSupportActionBar().setTitle("My Title");
-
 
         MainActivityViewModel viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
 
@@ -68,8 +65,9 @@ public class MainActivity extends AppCompatActivity {
         binding.setLifecycleOwner(this);
         NavHeaderMainBinding _bind =  DataBindingUtil.inflate(getLayoutInflater(),R.layout.nav_header_main,binding.navView,false);
         binding.navView.addHeaderView(_bind.getRoot());
-        //binding.appBarMain.setModel2(false);
-        _bind.setCat(viewModel.cat);
+
+        _bind.setMainModel(viewModel);
+
 
 
         viewModel.getLoginObserve().observe(this, this::setActualFragment);
@@ -98,9 +96,13 @@ public class MainActivity extends AppCompatActivity {
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }else{
+
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             }
         }
+
+
+
 
 }

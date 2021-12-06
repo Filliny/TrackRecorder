@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.trackrecorder.MainActivityViewModel;
+import com.example.trackrecorder.ui.MainActivityViewModel;
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.FragmentLogoutBinding;
 import com.example.trackrecorder.helpers.OnLogoutConfirm;
@@ -48,12 +48,14 @@ public class LogoutFragment extends Fragment implements OnLogoutConfirm {
         new LogoutDialogFragment(this).show(getChildFragmentManager(),null);
 
         mainViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
+
     }
 
     @Override
     public void Confirm() {
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_logoutFragment_to_nav_login);
         mainViewModel.logoutUser();
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_logoutFragment_to_nav_login);
+
     }
 
     @Override

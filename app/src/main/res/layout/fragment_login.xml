@@ -5,16 +5,14 @@
     tools:context=".ui.login.LoginFragment">
 
     <data>
-        <import type="com.example.trackrecorder.database.models.UserModel"/>
         <import type="com.example.trackrecorder.ui.login.LoginFragmentViewModel"/>
-
+        <import type="com.example.trackrecorder.ui.login.LoginFragment"/>
         <variable
-            name="user"
-            type="UserModel" />
-
-        <variable
-            name="vm"
+            name="model_login"
             type="LoginFragmentViewModel" />
+        <variable
+            name="fragment"
+            type="LoginFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,10 +41,12 @@
                 android:id="@+id/emailInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
                 android:hint="Enter your E-mail"
+                app:error_field="@{model_login.errorObservable.emailError}"
                 app:layout_constraintTop_toBottomOf="@id/emailLabel"
                 app:layout_constraintBottom_toTopOf="@id/passwordLabel"
-                android:text="@={user.email}"
+                android:text="@={model_login.userRequest.email}"
                 />
 
             <TextView
@@ -64,10 +64,10 @@
                 android:layout_height="wrap_content"
                 android:hint="Enter your password"
                 android:inputType="textPassword"
+                app:error_field="@{model_login.errorObservable.passwordError}"
                 app:layout_constraintTop_toBottomOf="@id/passwordLabel"
-                app:layout_constraintBottom_toTopOf="@id/buttonSignIn"/>
-<!--                android:text="@{model_login.user.password}"-->
-                />
+                app:layout_constraintBottom_toTopOf="@id/buttonSignIn"
+                android:text="@={model_login.userRequest.password}"/>
 
             <Button
                 android:id="@+id/buttonSignIn"
@@ -77,7 +77,7 @@
                 app:layout_constraintTop_toBottomOf="@id/passwordInput"
                 app:layout_constraintBottom_toTopOf="@id/registerLink"
                 android:layout_marginVertical="20dp"
-                android:onClick="@{()->vm.loginButtonPress()}"/>
+                android:onClick="@{()->model_login.loginButtonPress()}"/>
 
             <TextView
                 android:id="@+id/registerLink"
@@ -87,6 +87,7 @@
                 app:layout_constraintTop_toBottomOf="@id/buttonSignIn"
                 app:layout_constraintBottom_toBottomOf="@id/buttonSignIn"
                 android:textAlignment="center"
+                android:clickable="true"
                 style="@style/LinkRegister"/>
 
 
