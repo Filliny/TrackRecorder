@@ -12,7 +12,7 @@ import com.example.trackrecorder.database.models.UserModel;
 
 
 @SuppressLint("RestrictedApi")
-@Database(entities = {UserModel.class, }, version = 1)
+@Database(entities = {UserModel.class, }, version = 1,exportSchema = false)
 public abstract class AppDatabaseRoom extends RoomDatabase {
 
     @NonNull

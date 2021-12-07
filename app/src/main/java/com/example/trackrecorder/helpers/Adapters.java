@@ -1,5 +1,9 @@
 package com.example.trackrecorder.helpers;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
@@ -16,6 +20,11 @@ public class Adapters {
         if(error != null){
             view.setError(error);
         }
+    }
+
+    @BindingAdapter("setBitmap")
+    public static void setBitmapDrawable(ImageView view, Bitmap bitmap){
+        view.setImageDrawable(new BitmapDrawable(Resources.getSystem(),bitmap));
     }
 
 }

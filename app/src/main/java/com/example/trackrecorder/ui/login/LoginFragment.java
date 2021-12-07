@@ -37,20 +37,18 @@ public class LoginFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(LoginFragmentViewModel.class);
         mainViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
 
-        //to hide HomeAsUp
-        //mainViewModel.getLoginObserve().postValue(false);
+        //to re-hide DisplayHomeAsUp when back from register
+        //todo find right way for hiding menu button
+        if(mainViewModel.getCurrentUser() == null){
+            mainViewModel.getLoginObserve().postValue(false);
+        }
+
 
         binding.setLifecycleOwner(this);
         binding.setModelLogin(viewModel);
 
         binding.registerLink.setOnClickListener(this::toRegisterFragment);
-        viewModel.getUserToWorkWith().observe(getViewLifecycleOwner(), new Observer<UserModel>() {
-            @Override
-            public void onChanged(UserModel userModel) {
-
-                mainViewModel.loginUser(userModel);
-            }
-        });
+        viewModel.getUserToWorkWith().observe(getViewLifecycleOwner(), userModel -> mainViewModel.loginUser(userModel));
     }
 
 

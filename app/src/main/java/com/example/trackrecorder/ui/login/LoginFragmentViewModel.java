@@ -45,7 +45,7 @@ public class LoginFragmentViewModel extends AndroidViewModel {
 
         if (!isLoginFormValid()) return;
         //cos userRequest have no id - we get proper user from base
-        UserModel workUser =   userRepository.getUserFromRequest(userRequest);
+        UserModel workUser = userRepository.getUserFromRequest(userRequest);
         userToWorkWith.postValue(workUser);
 
     }
@@ -60,13 +60,14 @@ public class LoginFragmentViewModel extends AndroidViewModel {
             result = false;
         }
 
-//user
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userRequest.getEmail()).matches()) {
+            errorHolder.emailError = "Enter Valid Email";
+            result = false;
+        }
 
         if (userRequest.getPassword() == null) {
             errorHolder.passwordError = "Enter Your Password";
             result = false;
-        } else {
-
         }
 
         if (userRequest.getPassword() != null && userRequest.getEmail() != null) {

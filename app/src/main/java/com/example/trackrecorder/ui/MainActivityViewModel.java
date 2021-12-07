@@ -1,9 +1,13 @@
 package com.example.trackrecorder.ui;
 
 import android.app.Application;
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.trackrecorder.App;
 import com.example.trackrecorder.database.SharedLoginStorage;
@@ -16,7 +20,11 @@ public class MainActivityViewModel extends AndroidViewModel {
     UserRepository userRepository;
     UserModel currentUser;
     MutableLiveData<Boolean> loginObserve = new MutableLiveData<>();
+    ObservableField<UserModel> userObserve = new ObservableField<>();
     SharedLoginStorage sharedLogin;
+
+
+    MutableLiveData<Bitmap> globalAvatar = new MutableLiveData<>();
 
 
     public MainActivityViewModel(@NonNull Application application) {
@@ -24,34 +32,62 @@ public class MainActivityViewModel extends AndroidViewModel {
 
         userRepository = App.getInstance().getUserRepository();
         sharedLogin = SharedLoginStorage.getInstance(getApplication());
-        int id = sharedLogin.getId();
 
-        if(sharedLogin.isLogged()){
-            currentUser = userRepository.getUser(sharedLogin.getId());
+        if (sharedLogin.isLogged()) {
+            setCurrentUser(userRepository.getUser(sharedLogin.getId()));
             loginObserve.postValue(true);
 
-        }else{
+        } else {
             loginObserve.postValue(false);
         }
 
     }
 
-    public UserModel getCurrentUser() { return currentUser; }
+    public UserModel getCurrentUser() {
+        return currentUser;
+    }
 
     public MutableLiveData<Boolean> getLoginObserve() {
         return loginObserve;
     }
 
-    public void logoutUser(){
+    public ObservableField<UserModel> getUserObserve() {
+        return userObserve;
+    }
+
+    public MutableLiveData<Bitmap> getGlobalAvatar() {
+        return globalAvatar;
+    }
+
+
+    public void logoutUser() {
         sharedLogin.logoutUser();
+        setCurrentUser(null);
         loginObserve.postValue(false);
     }
 
-    public void loginUser(UserModel user){
+    public void loginUser(UserModel user) {
         sharedLogin.loginUser(user.getId());
-        currentUser = user;
+        setCurrentUser(user);
         loginObserve.postValue(true);
 
+    }
+
+    private void setCurrentUser(UserModel user) {
+        this.currentUser = user;
+        userObserve.set(user);
+    }
+
+    public void setGlobalAvatar(Bitmap bitmap){
+
+        globalAvatar.postValue(bitmap);
+
+        if(currentUser != null){
+            currentUser.setAvatar(bitmap);
+            userObserve.set(currentUser);
+            userObserve.notifyChange();
+            userRepository.updateUser(currentUser);
+        }
     }
 
 }
