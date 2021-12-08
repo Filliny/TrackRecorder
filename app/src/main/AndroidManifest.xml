@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.trackrecorder">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -10,6 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_tr_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TrackRecorder">
+
+        <service
+            android:name=".services.LocationRecordService"
+            android:enabled="true"
+            android:foregroundServiceType="location"
+            android:exported="true"/>
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="@string/maps_api_key"/>
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"

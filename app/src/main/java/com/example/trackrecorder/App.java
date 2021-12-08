@@ -1,9 +1,12 @@
 package com.example.trackrecorder;
 
 import android.app.Application;
+import android.location.Location;
 
 import com.example.trackrecorder.database.DbContext;
 import com.example.trackrecorder.database.UserRepository;
+
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 /**
  * Created by Oleh Filipchuk ( olegf.droid@gmail.com ) on 06.12.2021.
@@ -12,6 +15,9 @@ import com.example.trackrecorder.database.UserRepository;
 public class App extends Application {
 
     UserRepository userRepository;
+
+
+    PublishSubject<Location> locationPublishSubject;
 
     private static App appInstance;
 
@@ -27,10 +33,15 @@ public class App extends Application {
 
         appInstance = this;
         userRepository = UserRepository.getInstance(DbContext.getDbContext(this));
+        locationPublishSubject = PublishSubject.create();
     }
 
     public UserRepository getUserRepository() {
         return userRepository;
+    }
+
+    public PublishSubject<Location> getLocationPublishSubject() {
+        return locationPublishSubject;
     }
 
 }

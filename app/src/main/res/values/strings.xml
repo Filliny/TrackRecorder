@@ -16,4 +16,6 @@
     <string name="title_home">MAP</string>
     <string name="btnArrowLeft"><![CDATA[<]]></string>
     <string name="btnArrowRight"><![CDATA[>]]></string>
+
+    <string name="maps_api_key">AIzaSyATP0AHZRzi62iaGN5XE6kmCl-5DXmFZjg</string>]
 </resources>
