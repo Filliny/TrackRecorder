@@ -4,10 +4,10 @@ import android.app.Application;
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.example.trackrecorder.App;
 import com.example.trackrecorder.database.SharedLoginStorage;
@@ -19,11 +19,12 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     UserRepository userRepository;
     UserModel currentUser;
-    MutableLiveData<Boolean> loginObserve = new MutableLiveData<>();
-    ObservableField<UserModel> userObserve = new ObservableField<>();
     SharedLoginStorage sharedLogin;
 
-
+    MutableLiveData<Boolean> loginObserve = new MutableLiveData<>();
+    ObservableField<UserModel> userObserve = new ObservableField<>();
+    ObservableBoolean showFloatingButton = new ObservableBoolean();
+    ObservableBoolean recordState = new ObservableBoolean();
     MutableLiveData<Bitmap> globalAvatar = new MutableLiveData<>();
 
 
@@ -59,6 +60,13 @@ public class MainActivityViewModel extends AndroidViewModel {
         return globalAvatar;
     }
 
+    public ObservableBoolean getRecordState() {
+        return recordState;
+    }
+
+    public ObservableBoolean getShowFloatingButton() {
+        return showFloatingButton;
+    }
 
     public void logoutUser() {
         sharedLogin.logoutUser();
@@ -78,16 +86,17 @@ public class MainActivityViewModel extends AndroidViewModel {
         userObserve.set(user);
     }
 
-    public void setGlobalAvatar(Bitmap bitmap){
+    public void setGlobalAvatar(Bitmap bitmap) {
 
         globalAvatar.postValue(bitmap);
 
-        if(currentUser != null){
+        if (currentUser != null) {
             currentUser.setAvatar(bitmap);
             userObserve.set(currentUser);
             userObserve.notifyChange();
             userRepository.updateUser(currentUser);
         }
+
     }
 
 }

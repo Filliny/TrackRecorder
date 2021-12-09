@@ -46,8 +46,9 @@ public class LoginFragmentViewModel extends AndroidViewModel {
         if (!isLoginFormValid()) return;
         //cos userRequest have no id - we get proper user from base
         UserModel workUser = userRepository.getUserFromRequest(userRequest);
-        userToWorkWith.postValue(workUser);
-
+        if(workUser != null){
+            userToWorkWith.postValue(workUser);
+        }
     }
 
     private boolean isLoginFormValid() {

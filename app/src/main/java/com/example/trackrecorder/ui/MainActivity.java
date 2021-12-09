@@ -4,16 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
@@ -21,12 +23,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.ActivityMainBinding;
 import com.example.trackrecorder.databinding.NavHeaderMainBinding;
+import com.example.trackrecorder.services.LocationRecordService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     NavController navController;
     MainActivityViewModel viewModel;
+    Intent intentLocation;
 
 
     @Override
@@ -57,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 
-        navController.addOnDestinationChangedListener((controller, destination, arguments)
-                -> binding.appBarMain.setFloating(destination.getId() == R.id.nav_home));
+
 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -67,10 +70,15 @@ public class MainActivity extends AppCompatActivity {
 
         binding.setModelMain(viewModel);
         binding.setLifecycleOwner(this);
+        binding.appBarMain.setBarModel(viewModel);
+
         NavHeaderMainBinding headerMenuBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.nav_header_main, binding.navView, false);
         binding.navView.addHeaderView(headerMenuBinding.getRoot());
-
         headerMenuBinding.setMainModel(viewModel);
+
+        //to show record button only on map fragment- leave here to availability expand it ot all fragments
+        navController.addOnDestinationChangedListener((controller, destination, arguments)
+                -> viewModel.getShowFloatingButton().set(destination.getId() == R.id.nav_home));
 
         viewModel.getLoginObserve().observe(this, this::setActualFragment);
     }
@@ -88,9 +96,19 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() == null) return;
 
         if (logged) {
-            navController.navigate(R.id.nav_home);
-            binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //ask for permission before display any map fragments
+            if(isLocationPermissionAvailable()){
+
+                navController.navigate(R.id.nav_home);
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }else{
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                }, 1);
+            }
+
         } else {
 
             binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -111,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != -1 && requestCode != 1 && data == null) return;
+        if (resultCode != -1 && requestCode != 1 || data == null) return;
 
         ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), data.getData());
         try {
@@ -126,4 +144,42 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+    public boolean isLocationPermissionAvailable(){
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_GRANTED;
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1 && isLocationPermissionAvailable()) {
+            setActualFragment(true);
+        }
+    }
+
+
+    public void switchLocationService(View view){
+        intentLocation = new Intent(getApplication(), LocationRecordService.class);
+
+        if(viewModel.getRecordState().get()){
+            stopService(intentLocation);
+            viewModel.getRecordState().set(false);
+            Toast.makeText(this,"Record Stopped",Toast.LENGTH_LONG).show();
+        }else {
+            startService(intentLocation);
+            viewModel.getRecordState().set(true);
+            Toast.makeText(this,"Record Started",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        stopService(intentLocation);
+    }
 }

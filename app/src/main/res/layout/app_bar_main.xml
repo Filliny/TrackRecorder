@@ -7,8 +7,9 @@
 
     <data>
         <variable
-            name="floating"
-            type="Boolean" />
+            name="barModel"
+            type="MainActivityViewModel" />
+        <import type="com.example.trackrecorder.ui.MainActivityViewModel"/>
         <import type="android.view.View"/>
 
 
@@ -43,8 +44,10 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="@color/orange"
             app:borderWidth="0dp"
-            app:srcCompat="@drawable/ic_record"
-            android:visibility="@{floating? View.VISIBLE:View.INVISIBLE}"
+            android:onClick="switchLocationService"
+            android:src="@{barModel.getRecordState ? @drawable/ic_stop : @drawable/ic_record}"
+
+            android:visibility="@{barModel.getShowFloatingButton ? View.VISIBLE:View.INVISIBLE}"
             />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

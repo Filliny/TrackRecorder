@@ -47,10 +47,7 @@ import java.util.GregorianCalendar;
 public class HistoryFragment extends Fragment implements DatePickerDialog.OnDateSetListener, OnMapReadyCallback {
 
     GoogleMap googleMap;
-    Location lastLocation;
     Marker marker;
-    Intent intentLocation;
-
     FragmentHistoryBinding binding;
 
     @Override
@@ -73,12 +70,12 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager()
                 .findFragmentById(R.id.mapFragment);
 
-        if (supportMapFragment == null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            supportMapFragment = SupportMapFragment.newInstance();
-            fragmentTransaction.replace(R.id.mapFragment, supportMapFragment).commit();
-        }
+//        if (supportMapFragment == null) {
+//            FragmentManager fragmentManager = getFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            supportMapFragment = SupportMapFragment.newInstance();
+//            fragmentTransaction.replace(R.id.mapFragment, supportMapFragment).commit();
+//        }
 
         supportMapFragment.getMapAsync(this::onMapReady);
     }
@@ -110,41 +107,10 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
-
-        if(isLocationPermissionAvailable()){
-            this.googleMap.setMyLocationEnabled(true);
-        }
-        else{
-            this.requestPermissions(new String[]{
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            }, 1);
-        }
-
-        Location loc = new Location("dummmy");
-        loc.setLatitude(50.477257);
-        loc.setLongitude(30.467028);
-         goToLocation(loc);
+        this.googleMap.setMyLocationEnabled(true);
 
     }
 
-
-
-
-    public boolean isLocationPermissionAvailable(){
-        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_GRANTED;
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == 1 && isLocationPermissionAvailable()) {
-            this.googleMap.setMyLocationEnabled(true);
-        }
-    }
 
     private void goToLocation(Location location){
 

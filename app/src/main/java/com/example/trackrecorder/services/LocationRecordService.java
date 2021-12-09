@@ -64,4 +64,10 @@ public class LocationRecordService extends Service {
                 null);
 
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        locationProviderClient.removeLocationUpdates(locationCallback);
+    }
 }
