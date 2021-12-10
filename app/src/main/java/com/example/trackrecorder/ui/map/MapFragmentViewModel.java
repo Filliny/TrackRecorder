@@ -2,9 +2,11 @@ package com.example.trackrecorder.ui.map;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.location.Location;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -17,6 +19,12 @@ public class MapFragmentViewModel extends AndroidViewModel  {
     LocationRequest lastLocationRequest;
     FusedLocationProviderClient lastLocationProviderClient;
     LocationCallback lastLocationCallback;
+
+    public MutableLiveData<Location> getMarkerPosition() {
+        return markerPosition;
+    }
+
+    MutableLiveData<Location> markerPosition = new MutableLiveData<>();
 
     public MapFragmentViewModel(@NonNull Application application) {
         super(application);
@@ -32,19 +40,24 @@ public class MapFragmentViewModel extends AndroidViewModel  {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
+                markerPosition.postValue(locationResult.getLastLocation());
 
-                locationResult.getLastLocation();
             }
         };
+
+
     }
 
     @SuppressLint("MissingPermission")
 
 
-    private void zoomToLocation(Boolean startZoom){
+    public void zoomToLocation(Boolean isRecordStarted){
 
-        if(startZoom){
+        if(isRecordStarted){
 
+            lastLocationProviderClient.removeLocationUpdates(lastLocationCallback);
+
+        }else{
             lastLocationProviderClient.requestLocationUpdates(lastLocationRequest,lastLocationCallback,null);
         }
     }

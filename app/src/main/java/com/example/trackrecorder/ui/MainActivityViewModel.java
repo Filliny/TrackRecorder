@@ -25,6 +25,12 @@ public class MainActivityViewModel extends AndroidViewModel {
     ObservableField<UserModel> userObserve = new ObservableField<>();
     ObservableBoolean showFloatingButton = new ObservableBoolean();
     ObservableBoolean recordState = new ObservableBoolean();
+
+    public MutableLiveData<Boolean> getGlobalRecordState() {
+        return globalRecordState;
+    }
+
+    MutableLiveData<Boolean> globalRecordState = new MutableLiveData<>();
     MutableLiveData<Bitmap> globalAvatar = new MutableLiveData<>();
 
 

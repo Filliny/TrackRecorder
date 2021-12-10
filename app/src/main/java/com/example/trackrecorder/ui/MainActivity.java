@@ -169,10 +169,14 @@ public class MainActivity extends AppCompatActivity {
         if(viewModel.getRecordState().get()){
             stopService(intentLocation);
             viewModel.getRecordState().set(false);
+            viewModel.getGlobalRecordState().postValue(false);
+
             Toast.makeText(this,"Record Stopped",Toast.LENGTH_LONG).show();
         }else {
             startForegroundService( intentLocation);
             viewModel.getRecordState().set(true);
+            viewModel.getGlobalRecordState().postValue(true);
+
             Toast.makeText(this,"Record Started",Toast.LENGTH_LONG).show();
         }
     }
