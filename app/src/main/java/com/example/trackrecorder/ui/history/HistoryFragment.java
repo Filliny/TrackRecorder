@@ -70,14 +70,9 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager()
                 .findFragmentById(R.id.mapFragment);
 
-//        if (supportMapFragment == null) {
-//            FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            supportMapFragment = SupportMapFragment.newInstance();
-//            fragmentTransaction.replace(R.id.mapFragment, supportMapFragment).commit();
-//        }
 
-        supportMapFragment.getMapAsync(this::onMapReady);
+        assert supportMapFragment != null;
+        supportMapFragment.getMapAsync(this);
     }
 
 

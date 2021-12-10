@@ -33,6 +33,4 @@ public class Adapters {
         view.setImageDrawable(new BitmapDrawable(Resources.getSystem(),bitmap));
     }
 
-
-
 }

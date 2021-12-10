@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void switchLocationService(View view){
         intentLocation = new Intent(getApplication(), LocationRecordService.class);
 
@@ -170,11 +171,12 @@ public class MainActivity extends AppCompatActivity {
             viewModel.getRecordState().set(false);
             Toast.makeText(this,"Record Stopped",Toast.LENGTH_LONG).show();
         }else {
-            startService(intentLocation);
+            startForegroundService( intentLocation);
             viewModel.getRecordState().set(true);
             Toast.makeText(this,"Record Started",Toast.LENGTH_LONG).show();
         }
     }
+
 
     @Override
     protected void onDestroy() {

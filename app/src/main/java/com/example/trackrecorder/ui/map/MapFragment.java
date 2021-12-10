@@ -24,6 +24,8 @@ import com.example.trackrecorder.App;
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.FragmentMapBinding;
 import com.example.trackrecorder.services.LocationRecordService;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,6 +57,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super(R.layout.fragment_map);
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -64,37 +68,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager()
                 .findFragmentById(R.id.mapFragment);
 
-//        if (supportMapFragment == null) {
-//            FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            supportMapFragment = SupportMapFragment.newInstance();
-//            fragmentTransaction.replace(R.id.mapFragment, supportMapFragment).commit();
-//        }
 
-        supportMapFragment.getMapAsync(this::onMapReady);
+        assert supportMapFragment != null;
+        supportMapFragment.getMapAsync(this);
 
         App.getInstance().getLocationPublishSubject()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Location>() {
-                    @Override
-                    public void accept(Location location) throws Throwable {
-                        DrawPosition(location);
-                        Log.d("LOCATION", "accept: ");
-                    }
+                .subscribe(location -> {
+                    DrawPosition(location);
+                    Log.d("LOCATION", "accept: ");
                 });
-
     }
 
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
         this.googleMap = googleMap;
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        this.googleMap.setPadding(10,10,10,200);
+        this.googleMap.setMyLocationEnabled(true);
+
         polyline = googleMap.addPolyline(new PolylineOptions()
                 .width(5)
                 .color(Color.RED));
-
-
 
     }
 
@@ -125,7 +123,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         polyline.setPoints(points);
 
     }
-
 
 
 }

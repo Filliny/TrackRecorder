@@ -1,13 +1,20 @@
 package com.example.trackrecorder.services;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
+
 import com.example.trackrecorder.App;
+import com.example.trackrecorder.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -20,14 +27,14 @@ public class LocationRecordService extends Service {
 
     private LocationCallback locationCallback;
 
+    private final Integer RECORD_NOTIFICATION_ID = 4;
+
 
     public LocationRecordService() {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+    public IBinder onBind(Intent intent) {return  null;
     }
 
     @SuppressLint("MissingPermission")
@@ -48,7 +55,6 @@ public class LocationRecordService extends Service {
                     for (Location location : locationResult.getLocations()) {
 
                         Log.d("loc", location.toString());
-                        //App.instance.locationPublishSubject.onNext(location);
                         App.getInstance().getLocationPublishSubject().onNext(location);
                     }
                 }
@@ -64,6 +70,42 @@ public class LocationRecordService extends Service {
                 null);
 
     }
+
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        startForeground(RECORD_NOTIFICATION_ID,
+                showRecordNotification(intent.getStringExtra("msg")));
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+
+    private Notification showRecordNotification(String msg) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), getRecordNotifyChanel())
+                .setSmallIcon(R.drawable.ic_message)
+                .setContentTitle("Location is recording")
+                .setContentText(msg)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+
+        return builder.build();
+    }
+
+    private String getRecordNotifyChanel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("record_channel_id",
+                    "Allow record location in background",
+                    NotificationManager.IMPORTANCE_HIGH);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        return "record_channel_id";
+    }
+
 
     @Override
     public void onDestroy() {
