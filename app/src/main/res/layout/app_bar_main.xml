@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.MainActivity">
 
     <data>
+
         <variable
             name="barModel"
             type="MainActivityViewModel" />
-        <import type="com.example.trackrecorder.ui.MainActivityViewModel"/>
-        <import type="android.view.View"/>
+
+        <import type="com.example.trackrecorder.ui.MainActivityViewModel" />
+
+        <import type="android.view.View" />
 
 
     </data>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -29,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/Theme.TrackRecorder.PopupOverlay"/>
+                app:popupTheme="@style/Theme.TrackRecorder.PopupOverlay" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -43,12 +46,11 @@
             android:layout_marginEnd="@dimen/fab_margin"
             android:layout_marginBottom="16dp"
             android:backgroundTint="@color/orange"
-            app:borderWidth="0dp"
             android:onClickListener="@{()->barModel.switchLocationService()}"
             android:src="@{barModel.globalRecordState ? @drawable/ic_stop : @drawable/ic_record}"
-
             android:visibility="@{barModel.getShowFloatingButton ? View.VISIBLE:View.INVISIBLE}"
-            />
+
+            app:borderWidth="0dp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

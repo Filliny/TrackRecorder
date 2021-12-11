@@ -5,20 +5,16 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.view.View;
 
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.FragmentMapBinding;
 import com.example.trackrecorder.ui.MainActivityViewModel;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,7 +35,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     FragmentMapBinding binding;
     Marker marker;
     Polyline polyline;
-    List<LatLng> points = new ArrayList<>();
 
     MainActivityViewModel mainViewModel;
     MapFragmentViewModel viewModel;
@@ -65,7 +59,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mainViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
         viewModel = new ViewModelProvider(this).get(MapFragmentViewModel.class);
 
-        viewModel.setCurrentUser( mainViewModel.getCurrentUser());
+        viewModel.setCurrentUser(mainViewModel.getCurrentUser());
 
 
         //move to static position
@@ -112,7 +106,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void setMarkerPosition(Location location) {
 
-        if(googleMap == null) return;
+        if (googleMap == null) return;
 
         if (marker == null) {
 
@@ -127,7 +121,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void moveCamera(Location location) {
-        if(googleMap == null) return;
+        if (googleMap == null) return;
 
         CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(
                 new LatLng(location.getLatitude(), location.getLongitude()),

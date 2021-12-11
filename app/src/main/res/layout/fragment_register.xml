@@ -7,7 +7,8 @@
     <data>
 
         <import type="com.example.trackrecorder.ui.register.RegisterFragmentViewModel" />
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="modelRegister"
@@ -45,9 +46,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/nav_header_desc"
-                    android:scaleType="centerCrop"
                     android:onClick="selectAvatar"
                     android:paddingTop="@dimen/nav_header_vertical_spacing"
+                    android:scaleType="centerCrop"
                     app:setBitmap="@{modelRegister.observableUser.avatar}" />
 
             </androidx.cardview.widget.CardView>
@@ -57,11 +58,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tap to change avatar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/userAvatarCard"
+                android:visibility="@{modelRegister.avatarHintVisibility?View.VISIBLE:View.INVISIBLE}"
                 app:layout_constraintBottom_toTopOf="@id/emailLabel"
-                android:visibility="@{modelRegister.avatarHintVisibility?View.VISIBLE:View.INVISIBLE}"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userAvatarCard" />
 
 
             <TextView

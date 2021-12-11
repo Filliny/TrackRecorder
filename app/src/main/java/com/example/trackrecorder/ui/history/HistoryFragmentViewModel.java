@@ -60,7 +60,7 @@ public class HistoryFragmentViewModel extends AndroidViewModel {
 
         });
 
-            trackList.postValue(resultList);
+        trackList.postValue(resultList);
 
     }
 
@@ -70,19 +70,19 @@ public class HistoryFragmentViewModel extends AndroidViewModel {
         dateLabel.postValue(dateLabelValue);
     }
 
-    public void previousDate(View view){
+    public void previousDate(View view) {
         switchDate(-1);
     }
 
-    public void nextDate(View view){
-       switchDate(1);
+    public void nextDate(View view) {
+        switchDate(1);
     }
 
-    private void switchDate(int amount){
+    private void switchDate(int amount) {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateCurrent);
-        cal.add(Calendar.DAY_OF_YEAR,amount);
+        cal.add(Calendar.DAY_OF_YEAR, amount);
         Date resultDate = cal.getTime();
 
         setDateSelected(resultDate);

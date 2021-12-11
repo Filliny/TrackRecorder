@@ -10,38 +10,38 @@ public class SharedLoginStorage {
     private static final String USER_ID_KEY = "USER_ID";
     private static SharedLoginStorage instance;
 
-    public SharedLoginStorage(Context context){
+    public SharedLoginStorage(Context context) {
         sharedPreferences = context.getSharedPreferences(USER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public static SharedLoginStorage getInstance(Context context){
-        if(instance == null){
+    public static SharedLoginStorage getInstance(Context context) {
+        if (instance == null) {
             instance = new SharedLoginStorage(context);
         }
-        return  instance;
+        return instance;
     }
 
-    private SharedPreferences.Editor getEditor(){
+    private SharedPreferences.Editor getEditor() {
         return sharedPreferences.edit();
     }
 
-    public void loginUser(int id){
+    public void loginUser(int id) {
 
         SharedPreferences.Editor editor = getEditor();
-        editor.putInt(USER_ID_KEY,id);
+        editor.putInt(USER_ID_KEY, id);
         editor.commit();
 
     }
 
-    public boolean isLogged(){
-       return sharedPreferences.contains(USER_ID_KEY);
+    public boolean isLogged() {
+        return sharedPreferences.contains(USER_ID_KEY);
     }
 
-    public void logoutUser(){
+    public void logoutUser() {
         getEditor().remove(USER_ID_KEY).commit();
     }
 
-    public int getId(){
-      return sharedPreferences.getInt(USER_ID_KEY,0);
+    public int getId() {
+        return sharedPreferences.getInt(USER_ID_KEY, 0);
     }
 }

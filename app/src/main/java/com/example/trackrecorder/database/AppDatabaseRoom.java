@@ -14,7 +14,7 @@ import com.example.trackrecorder.database.models.UserModel;
 
 
 @SuppressLint("RestrictedApi")
-@Database(entities = {UserModel.class, PointModel.class}, version = 1,exportSchema = false)
+@Database(entities = {UserModel.class, PointModel.class}, version = 1, exportSchema = false)
 public abstract class AppDatabaseRoom extends RoomDatabase {
 
     @NonNull
@@ -24,7 +24,7 @@ public abstract class AppDatabaseRoom extends RoomDatabase {
     public abstract PointDao getPointDao();
 
 
-   public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             Log.d("db-migrate", "success");

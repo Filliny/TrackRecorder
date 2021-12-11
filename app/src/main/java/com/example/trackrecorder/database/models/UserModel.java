@@ -5,13 +5,12 @@ import android.graphics.Bitmap;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 import com.example.trackrecorder.helpers.BitmapTypeConverter;
 
 @Entity(tableName = "users", indices = {
-        @Index(value = { "email" }, unique = true)
+        @Index(value = {"email"}, unique = true)
 })
 public class UserModel {
 

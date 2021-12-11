@@ -2,8 +2,6 @@ package com.example.trackrecorder.database.models;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import com.google.gson.Gson;
-import java.util.Date;
 
 @Entity(tableName = "points")
 public class PointModel {

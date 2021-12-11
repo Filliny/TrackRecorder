@@ -1,6 +1,9 @@
 package com.example.trackrecorder.ui.logout;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,14 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.trackrecorder.ui.MainActivityViewModel;
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.FragmentLogoutBinding;
 import com.example.trackrecorder.helpers.OnLogoutConfirm;
+import com.example.trackrecorder.ui.MainActivityViewModel;
 
 
 public class LogoutFragment extends Fragment implements OnLogoutConfirm {
@@ -45,7 +44,7 @@ public class LogoutFragment extends Fragment implements OnLogoutConfirm {
 
         binding = FragmentLogoutBinding.bind(view);
 
-        new LogoutDialogFragment(this).show(getChildFragmentManager(),null);
+        new LogoutDialogFragment(this).show(getChildFragmentManager(), null);
 
         mainViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
 

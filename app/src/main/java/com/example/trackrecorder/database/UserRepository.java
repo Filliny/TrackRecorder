@@ -15,45 +15,45 @@ public class UserRepository {
     AppDatabaseRoom db;
 
     @SuppressLint("UnsafeOptInUsageError")
-    private UserRepository(AppDatabaseRoom databaseContext){
+    private UserRepository(AppDatabaseRoom databaseContext) {
         this.db = databaseContext;
     }
 
-    public static UserRepository getInstance(AppDatabaseRoom databaseContext){
+    public static UserRepository getInstance(AppDatabaseRoom databaseContext) {
 
-        if(instance == null) instance = new UserRepository(databaseContext);
-        return  instance;
+        if (instance == null) instance = new UserRepository(databaseContext);
+        return instance;
     }
 
-    public void addUser(UserModel user){
+    public void addUser(UserModel user) {
 
         db.getUserDao().insert(user);
     }
 
-    public void deleteUsers(UserModel user){
+    public void deleteUsers(UserModel user) {
         db.getUserDao().delete(user);
     }
 
-    public UserModel getUser (int id){
+    public UserModel getUser(int id) {
 
         return db.getUserDao().getUser(id);
     }
 
-    public UserModel getUserFromRequest(UserModel userRequest){
+    public UserModel getUserFromRequest(UserModel userRequest) {
 
-        return db.getUserDao().getAuthUser(userRequest.getEmail(),userRequest.getPassword());
+        return db.getUserDao().getAuthUser(userRequest.getEmail(), userRequest.getPassword());
     }
 
-    public boolean isExist(String email){
+    public boolean isExist(String email) {
         return !(db.getUserDao().getExistUser(email) == null);
     }
 
 
-    public void updateUser(UserModel user){
-        db.getUserDao().update( user);
+    public void updateUser(UserModel user) {
+        db.getUserDao().update(user);
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return db.getUserDao().getAllUsers().size() == 0;
     }
 }

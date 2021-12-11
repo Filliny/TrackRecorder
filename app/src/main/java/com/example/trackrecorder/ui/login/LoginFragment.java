@@ -1,19 +1,16 @@
 package com.example.trackrecorder.ui.login;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.View;
-
 import com.example.trackrecorder.R;
-import com.example.trackrecorder.database.models.UserModel;
 import com.example.trackrecorder.databinding.FragmentLoginBinding;
 import com.example.trackrecorder.ui.MainActivityViewModel;
 
@@ -39,7 +36,7 @@ public class LoginFragment extends Fragment {
 
         //to re-hide DisplayHomeAsUp when back from register
         //todo find right way for hiding menu button
-        if(mainViewModel.getCurrentUser() == null){
+        if (mainViewModel.getCurrentUser() == null) {
             mainViewModel.getLoginObserve().postValue(false);
         }
 
@@ -52,8 +49,8 @@ public class LoginFragment extends Fragment {
     }
 
 
-    public void toRegisterFragment(View view){
-      NavController navController =  Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_main);
-      navController.navigate(R.id.action_loginFragment_to_signInFragment);
+    public void toRegisterFragment(View view) {
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+        navController.navigate(R.id.action_loginFragment_to_signInFragment);
     }
 }

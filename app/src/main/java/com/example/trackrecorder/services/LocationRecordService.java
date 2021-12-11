@@ -15,14 +15,11 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.trackrecorder.App;
 import com.example.trackrecorder.R;
-import com.example.trackrecorder.database.models.PointModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-
-import java.util.Date;
 
 public class LocationRecordService extends Service {
 
@@ -37,7 +34,8 @@ public class LocationRecordService extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {return  null;
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @SuppressLint("MissingPermission")
@@ -80,7 +78,7 @@ public class LocationRecordService extends Service {
         startForeground(RECORD_NOTIFICATION_ID,
                 showRecordNotification(getString(R.string.message_record_text)));
 
-        currentUserId = intent.getIntExtra(USER_INTENT_DATA_NAME,0);
+        currentUserId = intent.getIntExtra(USER_INTENT_DATA_NAME, 0);
 
         return super.onStartCommand(intent, flags, startId);
     }

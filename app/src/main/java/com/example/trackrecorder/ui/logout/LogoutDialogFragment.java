@@ -17,7 +17,7 @@ public class LogoutDialogFragment extends DialogFragment {
     OnLogoutConfirm callback;
     Boolean logout = false;
 
-    LogoutDialogFragment(OnLogoutConfirm callback){
+    LogoutDialogFragment(OnLogoutConfirm callback) {
         this.callback = callback;
     }
 
@@ -30,8 +30,8 @@ public class LogoutDialogFragment extends DialogFragment {
 
                     logout = true;
 
-                } )
-                .setNegativeButton(R.string.logout_dialog_cancel,(dialog, which) ->{
+                })
+                .setNegativeButton(R.string.logout_dialog_cancel, (dialog, which) -> {
 
                     logout = false;
 
@@ -42,9 +42,9 @@ public class LogoutDialogFragment extends DialogFragment {
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        if(logout){
+        if (logout) {
             callback.Confirm();
-        } else{
+        } else {
             callback.Cancel();
         }
 

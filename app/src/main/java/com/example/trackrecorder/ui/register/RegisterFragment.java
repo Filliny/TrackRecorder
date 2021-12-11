@@ -1,20 +1,14 @@
 package com.example.trackrecorder.ui.register;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.trackrecorder.R;
-import com.example.trackrecorder.database.models.UserModel;
 import com.example.trackrecorder.databinding.FragmentRegisterBinding;
 import com.example.trackrecorder.ui.MainActivityViewModel;
 

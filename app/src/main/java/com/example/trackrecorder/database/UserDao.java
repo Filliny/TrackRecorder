@@ -6,7 +6,6 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.trackrecorder.database.models.UserModel;
@@ -25,7 +24,7 @@ public interface UserDao {
 
     @NonNull
     @Delete
-    int  delete(@NonNull UserModel user);
+    int delete(@NonNull UserModel user);
 
     @NonNull
     @Update

@@ -8,7 +8,6 @@ import androidx.room.Query;
 
 import com.example.trackrecorder.database.models.PointModel;
 
-
 import java.util.List;
 
 @Dao

@@ -21,13 +21,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class MapFragmentViewModel extends AndroidViewModel  {
+public class MapFragmentViewModel extends AndroidViewModel {
 
     LocationRequest lastLocationRequest;
     FusedLocationProviderClient lastLocationProviderClient;
@@ -48,7 +47,7 @@ public class MapFragmentViewModel extends AndroidViewModel  {
     public MapFragmentViewModel(@NonNull Application application) {
         super(application);
 
-        lastLocationProviderClient =   LocationServices.getFusedLocationProviderClient(getApplication());
+        lastLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplication());
         lastLocationRequest = new LocationRequest();
         lastLocationRequest.setInterval(5000);
         lastLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -61,7 +60,7 @@ public class MapFragmentViewModel extends AndroidViewModel  {
             }
         };
 
-        locationSubscription =  App.getInstance().getLocationPublishSubject()
+        locationSubscription = App.getInstance().getLocationPublishSubject()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::recordLocation);
 
@@ -89,25 +88,24 @@ public class MapFragmentViewModel extends AndroidViewModel  {
     }
 
 
-
     @SuppressLint("MissingPermission")
-    public void zoomToLocation(Boolean isRecordStarted){
+    public void zoomToLocation(Boolean isRecordStarted) {
 
-        if(isRecordStarted){
+        if (isRecordStarted) {
 
             lastLocationProviderClient.removeLocationUpdates(lastLocationCallback);
 
-        }else{
-            lastLocationProviderClient.requestLocationUpdates(lastLocationRequest,lastLocationCallback,null);
+        } else {
+            lastLocationProviderClient.requestLocationUpdates(lastLocationRequest, lastLocationCallback, null);
 
         }
     }
 
 
-    private void recordLocation(Location location){
-        Log.d("LOCATION", "accept: "+ location.toString());
+    private void recordLocation(Location location) {
+        Log.d("LOCATION", "accept: " + location.toString());
 
-        if(pointsList == null){
+        if (pointsList == null) {
             pointsList = new ArrayList<>();
         }
 
@@ -116,15 +114,15 @@ public class MapFragmentViewModel extends AndroidViewModel  {
 
         markerFollow.postValue(location);
 
-        if(pointsList.size()%FOLLOW_LOCATION_THRESHOLD == 0){
+        if (pointsList.size() % FOLLOW_LOCATION_THRESHOLD == 0) {
             cameraMove.postValue(location);
         }
 
-       savePoint(location);
+        savePoint(location);
 
     }
 
-    private void savePoint(Location location){
+    private void savePoint(Location location) {
 
         PointModel point = new PointModel();
         point.setLatitude(location.getLatitude());

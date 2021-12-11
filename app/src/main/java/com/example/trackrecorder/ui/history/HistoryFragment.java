@@ -1,57 +1,36 @@
 package com.example.trackrecorder.ui.history;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Location;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.PermissionChecker;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.FragmentHistoryBinding;
 import com.example.trackrecorder.ui.MainActivityViewModel;
-import com.example.trackrecorder.ui.map.MapFragmentViewModel;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.material.timepicker.TimeFormat;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 public class HistoryFragment extends Fragment implements DatePickerDialog.OnDateSetListener, OnMapReadyCallback {
@@ -78,7 +57,7 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
 
         binding = FragmentHistoryBinding.bind(view);
 
-        SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager()
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapFragment);
 
         assert supportMapFragment != null;
@@ -87,7 +66,7 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         mainViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
         viewModel = new ViewModelProvider(this).get(HistoryFragmentViewModel.class);
 
-        viewModel.setCurrentUser( mainViewModel.getCurrentUser());
+        viewModel.setCurrentUser(mainViewModel.getCurrentUser());
 
         viewModel.getTrackList().observe(getViewLifecycleOwner(), this::DrawTrack);
 
@@ -99,10 +78,9 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.history_top_menu,menu);
+        inflater.inflate(R.menu.history_top_menu, menu);
     }
 
     @Override
@@ -110,8 +88,8 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
 
         Date date = Calendar.getInstance().getTime();
 
-        if(item.getItemId() == R.id.calendarOpen){
-            DatePickerDialog dialog = new DatePickerDialog(getContext(),this,date.getYear()+1900,date.getMonth(),date.getDate());
+        if (item.getItemId() == R.id.calendarOpen) {
+            DatePickerDialog dialog = new DatePickerDialog(getContext(), this, date.getYear() + 1900, date.getMonth(), date.getDate());
             dialog.show();
             return true;
         }
@@ -120,7 +98,7 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        Toast.makeText(getContext(),i+" "+i1+" "+i2,Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), i + " " + i1 + " " + i2, Toast.LENGTH_LONG).show();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(i, i1, i2);
@@ -149,7 +127,7 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         if (googleMap == null) return;
         polyline.setPoints(points);
 
-        if(points.size()>1){
+        if (points.size() > 1) {
             moveCamera(points.get(0));
         }
 

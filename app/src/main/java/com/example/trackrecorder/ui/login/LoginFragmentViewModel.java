@@ -1,7 +1,6 @@
 package com.example.trackrecorder.ui.login;
 
 import android.app.Application;
-import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -9,12 +8,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.trackrecorder.App;
-import com.example.trackrecorder.R;
 import com.example.trackrecorder.database.UserRepository;
 import com.example.trackrecorder.database.models.ErrorModel;
 import com.example.trackrecorder.database.models.UserModel;
-
-import org.xml.sax.ErrorHandler;
 
 public class LoginFragmentViewModel extends AndroidViewModel {
 
@@ -44,7 +40,7 @@ public class LoginFragmentViewModel extends AndroidViewModel {
         if (!isLoginFormValid()) return;
         //cos userRequest have no id - we get proper user from base
         UserModel workUser = userRepository.getUserFromRequest(userRequest);
-        if(workUser != null){
+        if (workUser != null) {
             userToWorkWith.postValue(workUser);
         }
     }

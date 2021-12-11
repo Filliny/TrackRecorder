@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -117,24 +116,24 @@ public class MainActivityViewModel extends AndroidViewModel {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void switchLocationService(){
+    public void switchLocationService() {
         intentLocation = new Intent(getApplication(), LocationRecordService.class);
-        intentLocation.putExtra(SERVICE_INTENT_DATA_NAME,currentUser.getId());
+        intentLocation.putExtra(SERVICE_INTENT_DATA_NAME, currentUser.getId());
 
-        if(recordState.get()){
+        if (recordState.get()) {
             getApplication().stopService(intentLocation);
             getRecordState().set(false);
             globalRecordState.postValue(false);
             globalRecordState.setValue(false);
 
-            Toast.makeText(getApplication(),"Record Stopped",Toast.LENGTH_LONG).show();
-        }else {
-            getApplication().startForegroundService( intentLocation);
+            Toast.makeText(getApplication(), "Record Stopped", Toast.LENGTH_LONG).show();
+        } else {
+            getApplication().startForegroundService(intentLocation);
             getRecordState().set(true);
             getGlobalRecordState().postValue(true);
             globalRecordState.setValue(true);
 
-            Toast.makeText(getApplication(),"Record Started",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplication(), "Record Started", Toast.LENGTH_LONG).show();
         }
     }
 
