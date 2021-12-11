@@ -44,8 +44,8 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="@color/orange"
             app:borderWidth="0dp"
-            android:onClick="switchLocationService"
-            android:src="@{barModel.getRecordState ? @drawable/ic_stop : @drawable/ic_record}"
+            android:onClickListener="@{()->barModel.switchLocationService()}"
+            android:src="@{barModel.globalRecordState ? @drawable/ic_stop : @drawable/ic_record}"
 
             android:visibility="@{barModel.getShowFloatingButton ? View.VISIBLE:View.INVISIBLE}"
             />

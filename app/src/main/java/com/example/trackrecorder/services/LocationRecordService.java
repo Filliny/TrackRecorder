@@ -15,20 +15,23 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.trackrecorder.App;
 import com.example.trackrecorder.R;
+import com.example.trackrecorder.database.models.PointModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Date;
+
 public class LocationRecordService extends Service {
 
     private FusedLocationProviderClient locationProviderClient;
-
     private LocationCallback locationCallback;
+    private int currentUserId = 0;
 
     private final Integer RECORD_NOTIFICATION_ID = 4;
-
+    private final String USER_INTENT_DATA_NAME = "userId";
 
     public LocationRecordService() {
     }
@@ -56,6 +59,7 @@ public class LocationRecordService extends Service {
 
                         Log.d("loc", location.toString());
                         App.getInstance().getLocationPublishSubject().onNext(location);
+                        //savePoint(location);
                     }
                 }
             }
@@ -68,15 +72,15 @@ public class LocationRecordService extends Service {
         locationProviderClient.requestLocationUpdates(locationRequest,
                 locationCallback,
                 null);
-
     }
-
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         startForeground(RECORD_NOTIFICATION_ID,
-                showRecordNotification(intent.getStringExtra("msg")));
+                showRecordNotification(getString(R.string.message_record_text)));
+
+        currentUserId = intent.getIntExtra(USER_INTENT_DATA_NAME,0);
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -85,7 +89,7 @@ public class LocationRecordService extends Service {
     private Notification showRecordNotification(String msg) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), getRecordNotifyChanel())
                 .setSmallIcon(R.drawable.ic_message)
-                .setContentTitle("Location is recording")
+                .setContentTitle(getString(R.string.app_name))
                 .setContentText(msg)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
@@ -96,7 +100,7 @@ public class LocationRecordService extends Service {
     private String getRecordNotifyChanel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("record_channel_id",
-                    "Allow record location in background",
+                    getString(R.string.notificaton_channel_description),
                     NotificationManager.IMPORTANCE_HIGH);
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);

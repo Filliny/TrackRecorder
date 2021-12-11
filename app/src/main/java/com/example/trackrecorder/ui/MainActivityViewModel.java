@@ -1,9 +1,14 @@
 package com.example.trackrecorder.ui;
 
 import android.app.Application;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
@@ -13,6 +18,7 @@ import com.example.trackrecorder.App;
 import com.example.trackrecorder.database.SharedLoginStorage;
 import com.example.trackrecorder.database.UserRepository;
 import com.example.trackrecorder.database.models.UserModel;
+import com.example.trackrecorder.services.LocationRecordService;
 
 
 public class MainActivityViewModel extends AndroidViewModel {
@@ -20,15 +26,13 @@ public class MainActivityViewModel extends AndroidViewModel {
     UserRepository userRepository;
     UserModel currentUser;
     SharedLoginStorage sharedLogin;
+    Intent intentLocation;
+    private final String SERVICE_INTENT_DATA_NAME = "userId";
 
     MutableLiveData<Boolean> loginObserve = new MutableLiveData<>();
     ObservableField<UserModel> userObserve = new ObservableField<>();
     ObservableBoolean showFloatingButton = new ObservableBoolean();
     ObservableBoolean recordState = new ObservableBoolean();
-
-    public MutableLiveData<Boolean> getGlobalRecordState() {
-        return globalRecordState;
-    }
 
     MutableLiveData<Boolean> globalRecordState = new MutableLiveData<>();
     MutableLiveData<Bitmap> globalAvatar = new MutableLiveData<>();
@@ -36,6 +40,8 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
+
+        globalRecordState.setValue(false);
 
         userRepository = App.getInstance().getUserRepository();
         sharedLogin = SharedLoginStorage.getInstance(getApplication());
@@ -74,6 +80,10 @@ public class MainActivityViewModel extends AndroidViewModel {
         return showFloatingButton;
     }
 
+    public MutableLiveData<Boolean> getGlobalRecordState() {
+        return globalRecordState;
+    }
+
     public void logoutUser() {
         sharedLogin.logoutUser();
         setCurrentUser(null);
@@ -104,5 +114,36 @@ public class MainActivityViewModel extends AndroidViewModel {
         }
 
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void switchLocationService(){
+        intentLocation = new Intent(getApplication(), LocationRecordService.class);
+        intentLocation.putExtra(SERVICE_INTENT_DATA_NAME,currentUser.getId());
+
+        if(recordState.get()){
+            getApplication().stopService(intentLocation);
+            getRecordState().set(false);
+            globalRecordState.postValue(false);
+            globalRecordState.setValue(false);
+
+            Toast.makeText(getApplication(),"Record Stopped",Toast.LENGTH_LONG).show();
+        }else {
+            getApplication().startForegroundService( intentLocation);
+            getRecordState().set(true);
+            getGlobalRecordState().postValue(true);
+            globalRecordState.setValue(true);
+
+            Toast.makeText(getApplication(),"Record Started",Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    @Override
+    protected void onCleared() {
+        getApplication().stopService(intentLocation);
+        super.onCleared();
+    }
+
 
 }

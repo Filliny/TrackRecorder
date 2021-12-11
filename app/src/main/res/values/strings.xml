@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">TrackRecorder</string>
     <string name="nav_header_desc">Header</string>
-    <string name="nav_header_title">Nav title</string>
-    <string name="nav_header_subtitle"> </string>
     <string name="menu_map">Map</string>
     <string name="menu_history">History</string>
     <string name="menu_signout">Logout</string>
@@ -14,8 +12,20 @@
     <string name="title_sign_in">REGISTER</string>
     <string name="title_login">LOGIN</string>
     <string name="title_home">MAP</string>
-    <string name="btnArrowLeft"><![CDATA[<]]></string>
-    <string name="btnArrowRight"><![CDATA[>]]></string>
 
-    <string name="maps_api_key">AIzaSyATP0AHZRzi62iaGN5XE6kmCl-5DXmFZjg</string>]
+
+    <string name="maps_api_key">AIzaSyATP0AHZRzi62iaGN5XE6kmCl-5DXmFZjg</string>
+    <string name="calendar_history">Calendar</string>
+    <string name="e_mail_label">E-mail</string>
+    <string name="enter_your_e_mail_hint">Enter your E-mail</string>
+    <string name="password_label">Password</string>
+    <string name="enter_your_password_hint">Enter your password</string>
+    <string name="register_button">REGISTER</string>
+    <string name="sign_in_button">SIGN IN</string>
+    <string name="register_new_user_link">Register New User</string>
+    <string name="message_record_text">Record started - your location is saving</string>
+    <string name="notificaton_channel_description">Allow record location in background</string>
+    <string name="logout_dialog_message">Really Logout?</string>
+    <string name="logout_dialog_ok">OK</string>
+    <string name="logout_dialog_cancel">CANCEL</string>]
 </resources>

@@ -8,15 +8,20 @@ import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import com.example.trackrecorder.database.models.PointModel;
 import com.example.trackrecorder.database.models.UserModel;
 
 
 @SuppressLint("RestrictedApi")
-@Database(entities = {UserModel.class, }, version = 1,exportSchema = false)
+@Database(entities = {UserModel.class, PointModel.class}, version = 1,exportSchema = false)
 public abstract class AppDatabaseRoom extends RoomDatabase {
 
     @NonNull
     public abstract UserDao getUserDao();
+
+    @NonNull
+    public abstract PointDao getPointDao();
 
 
    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {

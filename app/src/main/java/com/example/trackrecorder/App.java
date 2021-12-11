@@ -4,6 +4,7 @@ import android.app.Application;
 import android.location.Location;
 
 import com.example.trackrecorder.database.DbContext;
+import com.example.trackrecorder.database.PointsRepository;
 import com.example.trackrecorder.database.UserRepository;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -15,7 +16,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 public class App extends Application {
 
     UserRepository userRepository;
-
+    PointsRepository pointsRepository;
 
     PublishSubject<Location> locationPublishSubject;
 
@@ -33,11 +34,16 @@ public class App extends Application {
 
         appInstance = this;
         userRepository = UserRepository.getInstance(DbContext.getDbContext(this));
+        pointsRepository = PointsRepository.getInstance(DbContext.getDbContext(this));
         locationPublishSubject = PublishSubject.create();
     }
 
     public UserRepository getUserRepository() {
         return userRepository;
+    }
+
+    public PointsRepository getPointsRepository() {
+        return pointsRepository;
     }
 
     public PublishSubject<Location> getLocationPublishSubject() {

@@ -6,7 +6,7 @@
     <item
         android:id="@+id/calendarOpen"
         android:icon="@drawable/ic_calendar"
-        android:title="Calendar"
+        android:title="@string/calendar_history"
         app:showAsAction="ifRoom"/>
 
 

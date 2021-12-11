@@ -13,10 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.View;
 
-import com.example.trackrecorder.App;
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.FragmentMapBinding;
 import com.example.trackrecorder.ui.MainActivityViewModel;
@@ -34,8 +32,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -69,32 +65,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mainViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
         viewModel = new ViewModelProvider(this).get(MapFragmentViewModel.class);
 
-        viewModel.getMarkerPosition().observe(getViewLifecycleOwner(), new Observer<Location>() {
-            @Override
-            public void onChanged(Location location) {
-                setMarkerPosition(location);
-                moveCamera(location);
-            }
+        viewModel.setCurrentUser( mainViewModel.getCurrentUser());
+
+
+        //move to static position
+        viewModel.getStaticPosition().observe(getViewLifecycleOwner(), location -> {
+            setMarkerPosition(location);
+            moveCamera(location);
         });
 
-        mainViewModel.getGlobalRecordState().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                viewModel.zoomToLocation(aBoolean);
-            }
-        });
+        //get current state
+        viewModel.zoomToLocation(mainViewModel.getGlobalRecordState().getValue());
+        //subscribe to changes
+        mainViewModel.getGlobalRecordState().observe(getViewLifecycleOwner(),
+                aBoolean -> viewModel.zoomToLocation(aBoolean));
 
+        viewModel.getPointsToDraw().observe(getViewLifecycleOwner(), this::DrawTrack);
 
-        App.getInstance().getLocationPublishSubject()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(location -> {
-                    DrawPosition(location);
-                    Log.d("LOCATION", "accept: ");
-                });
+        viewModel.getMarkerFollow().observe(getViewLifecycleOwner(), this::setMarkerPosition);
 
-        if(!mainViewModel.getRecordState().get()){
-            mainViewModel.getGlobalRecordState().postValue(false);
-        }
+        viewModel.getCameraMove().observe(getViewLifecycleOwner(), this::moveCamera);
     }
 
 
@@ -113,20 +103,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-
-    private void DrawPosition(Location location) {
+    private void DrawTrack(List<LatLng> points) {
 
         if (googleMap == null) return;
-
-        //Update marker position
-        setMarkerPosition(location);
-
-        points.add(new LatLng(location.getLatitude(), location.getLongitude()));
         polyline.setPoints(points);
 
     }
 
     private void setMarkerPosition(Location location) {
+
+        if(googleMap == null) return;
 
         if (marker == null) {
 
@@ -141,6 +127,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void moveCamera(Location location) {
+        if(googleMap == null) return;
+
         CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(
                 new LatLng(location.getLatitude(), location.getLongitude()),
                 15

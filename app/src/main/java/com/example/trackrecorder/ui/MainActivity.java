@@ -24,12 +24,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.ActivityMainBinding;
 import com.example.trackrecorder.databinding.NavHeaderMainBinding;
-import com.example.trackrecorder.services.LocationRecordService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
@@ -40,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     NavController navController;
     MainActivityViewModel viewModel;
-    Intent intentLocation;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-
 
 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -97,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (logged) {
             //ask for permission before display any map fragments
-            if(isLocationPermissionAvailable()){
+            if (isLocationPermissionAvailable()) {
 
                 navController.navigate(R.id.nav_home);
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }else{
+            } else {
                 requestPermissions(new String[]{
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION
@@ -145,8 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    public boolean isLocationPermissionAvailable(){
+    public boolean isLocationPermissionAvailable() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_GRANTED;
     }
@@ -161,31 +155,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void switchLocationService(View view){
-        intentLocation = new Intent(getApplication(), LocationRecordService.class);
-
-        if(viewModel.getRecordState().get()){
-            stopService(intentLocation);
-            viewModel.getRecordState().set(false);
-            viewModel.getGlobalRecordState().postValue(false);
-
-            Toast.makeText(this,"Record Stopped",Toast.LENGTH_LONG).show();
-        }else {
-            startForegroundService( intentLocation);
-            viewModel.getRecordState().set(true);
-            viewModel.getGlobalRecordState().postValue(true);
-
-            Toast.makeText(this,"Record Started",Toast.LENGTH_LONG).show();
-        }
-    }
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        stopService(intentLocation);
     }
 }

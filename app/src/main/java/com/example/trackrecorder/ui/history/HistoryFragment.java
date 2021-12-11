@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,6 +32,8 @@ import android.widget.Toast;
 
 import com.example.trackrecorder.R;
 import com.example.trackrecorder.databinding.FragmentHistoryBinding;
+import com.example.trackrecorder.ui.MainActivityViewModel;
+import com.example.trackrecorder.ui.map.MapFragmentViewModel;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,18 +42,25 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.timepicker.TimeFormat;
 
-import java.time.DateTimeException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 
 public class HistoryFragment extends Fragment implements DatePickerDialog.OnDateSetListener, OnMapReadyCallback {
 
     GoogleMap googleMap;
-    Marker marker;
     FragmentHistoryBinding binding;
+    Polyline polyline;
+    MainActivityViewModel mainViewModel;
+    HistoryFragmentViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,20 +78,27 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
 
         binding = FragmentHistoryBinding.bind(view);
 
-
         SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager()
                 .findFragmentById(R.id.mapFragment);
 
-
         assert supportMapFragment != null;
         supportMapFragment.getMapAsync(this);
+
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
+        viewModel = new ViewModelProvider(this).get(HistoryFragmentViewModel.class);
+
+        viewModel.setCurrentUser( mainViewModel.getCurrentUser());
+
+        viewModel.getTrackList().observe(getViewLifecycleOwner(), this::DrawTrack);
+
+        binding.setModelHistory(viewModel);
+        binding.setLifecycleOwner(this);
+
+        viewModel.setDateSelected(new Date());
+
     }
 
 
-    @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        Toast.makeText(getContext(),i+" "+i1+" "+i2,Toast.LENGTH_LONG).show();
-    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -88,6 +107,7 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
         Date date = Calendar.getInstance().getTime();
 
         if(item.getItemId() == R.id.calendarOpen){
@@ -98,33 +118,50 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         return false;
     }
 
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        Toast.makeText(getContext(),i+" "+i1+" "+i2,Toast.LENGTH_LONG).show();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(i, i1, i2);
+
+        Date res = calendar.getTime();
+
+        viewModel.setDateSelected(res);
+    }
+
+
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        this.googleMap.setPadding(10, 10, 10, 200);
         this.googleMap.setMyLocationEnabled(true);
+
+        polyline = googleMap.addPolyline(new PolylineOptions()
+                .width(5)
+                .color(Color.RED));
+    }
+
+    private void DrawTrack(List<LatLng> points) {
+
+        if (googleMap == null) return;
+        polyline.setPoints(points);
+
+        if(points.size()>1){
+            moveCamera(points.get(0));
+        }
 
     }
 
-
-    private void goToLocation(Location location){
-
-        if(googleMap == null) return;
-
-        if(marker == null){
-
-            MarkerOptions options = new MarkerOptions()
-                    .position(new LatLng(location.getLatitude(),location.getLongitude()));
-            marker = googleMap.addMarker(options);
-
-        }else{
-            marker.setPosition(new LatLng(location.getLatitude(),location.getLongitude()));
-        }
-
+    private void moveCamera(LatLng location) {
         CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(
-                new LatLng(location.getLatitude(),location.getLongitude()),
+                location,
                 15
         );
         googleMap.animateCamera(camera);
     }
+
+
 }

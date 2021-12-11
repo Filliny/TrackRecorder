@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.trackrecorder.R;
 import com.example.trackrecorder.helpers.OnLogoutConfirm;
 
 public class LogoutDialogFragment extends DialogFragment {
@@ -24,13 +25,13 @@ public class LogoutDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         return new AlertDialog.Builder(requireContext())
-                .setMessage("Really Logout?")
-                .setPositiveButton("OK", (dialog, which) -> {
+                .setMessage(R.string.logout_dialog_message)
+                .setPositiveButton(R.string.logout_dialog_ok, (dialog, which) -> {
 
                     logout = true;
 
                 } )
-                .setNegativeButton("CANCEL",(dialog, which) ->{
+                .setNegativeButton(R.string.logout_dialog_cancel,(dialog, which) ->{
 
                     logout = false;
 

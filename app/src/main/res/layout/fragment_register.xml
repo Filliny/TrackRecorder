@@ -69,7 +69,7 @@
                 style="@style/LoginLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="E-mail"
+                android:text="@string/e_mail_label"
                 app:layout_constraintBottom_toTopOf="@id/emailInput"
                 app:layout_constraintTop_toBottomOf="@id/avatarHint" />
 
@@ -77,7 +77,7 @@
                 android:id="@+id/emailInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter your E-mail"
+                android:hint="@string/enter_your_e_mail_hint"
                 android:inputType="textEmailAddress"
                 android:text="@={modelRegister.userCandidate.email}"
                 app:error_field="@{modelRegister.errorObservable.emailError}"
@@ -89,7 +89,7 @@
                 style="@style/LoginLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Password"
+                android:text="@string/password_label"
                 app:layout_constraintBottom_toTopOf="@id/passwordInput"
                 app:layout_constraintTop_toBottomOf="@id/emailInput" />
 
@@ -97,7 +97,7 @@
                 android:id="@+id/passwordInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter your password"
+                android:hint="@string/enter_your_password_hint"
                 android:inputType="textPassword"
                 android:text="@={modelRegister.userCandidate.password}"
                 app:error_field="@{modelRegister.errorObservable.passwordError}"
@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
                 android:onClick="@{()->modelRegister.registerButtonPress()}"
-                android:text="REGISTER"
+                android:text="@string/register_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/passwordInput" />
 
