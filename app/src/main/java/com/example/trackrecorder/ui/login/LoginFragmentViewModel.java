@@ -28,8 +28,6 @@ public class LoginFragmentViewModel extends AndroidViewModel {
     public LoginFragmentViewModel(@NonNull Application application) {
         super(application);
         userRequest = new UserModel();
-        userRequest.setEmail("olegfil@gmail.com");
-        userRequest.setPassword("12345");
         userRepository = App.getInstance().getUserRepository();
     }
 
