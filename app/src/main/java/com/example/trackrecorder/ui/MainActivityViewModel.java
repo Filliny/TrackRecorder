@@ -14,6 +14,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.trackrecorder.App;
+import com.example.trackrecorder.R;
 import com.example.trackrecorder.database.SharedLoginStorage;
 import com.example.trackrecorder.database.UserRepository;
 import com.example.trackrecorder.database.models.UserModel;
@@ -126,14 +127,16 @@ public class MainActivityViewModel extends AndroidViewModel {
             globalRecordState.postValue(false);
             globalRecordState.setValue(false);
 
-            Toast.makeText(getApplication(), "Record Stopped", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplication(), getApplication().getText(R.string.toast_record_stopped)
+                    , Toast.LENGTH_LONG).show();
         } else {
             getApplication().startForegroundService(intentLocation);
             getRecordState().set(true);
             getGlobalRecordState().postValue(true);
             globalRecordState.setValue(true);
 
-            Toast.makeText(getApplication(), "Record Started", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplication(),  getApplication().getText(R.string.toat_record_started),
+                    Toast.LENGTH_LONG).show();
         }
     }
 

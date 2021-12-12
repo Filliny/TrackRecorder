@@ -27,6 +27,9 @@
     <string name="notificaton_channel_description">Разрешение записи местоположения в бэкграунде</string>
     <string name="logout_dialog_message">Действительно выйти?</string>
     <string name="logout_dialog_ok">ДА</string>
-    <string name="logout_dialog_cancel">ОТМЕНА</string>]
+    <string name="logout_dialog_cancel">ОТМЕНА</string>
+    <string name="toast_record_stopped">Запись остановлена</string>
+    <string name="toat_record_started">Запись включена</string>
+    ]
     ]
 </resources>
